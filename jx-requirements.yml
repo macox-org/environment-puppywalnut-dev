@@ -1,40 +1,105 @@
 autoUpdate:
   enabled: true
-  schedule: '0 0 * * *'
+  schedule: 0 0 * * *
+bootConfigURL: https://github.com/cloudbees/arcalos-boot-config.git
 cluster:
-  clusterName: ""
-  environmentGitOwner: ""
-  project: ""
+  azure: {}
+  chartRepository: http://bucketrepo/bucketrepo/charts/
+  clusterName: puppywalnut
+  environmentGitOwner: macox-org
+  environmentGitPublic: true
+  externalDNSSAName: puppywalnut-dn
+  gitKind: github
+  gitName: github
+  gitPublic: true
+  gitServer: https://github.com
+  gke:
+    projectNumber: "402004709990"
+  kanikoSAName: puppywalnut-ko
+  namespace: jx
+  project: cbjx-puppywalnut
   provider: gke
-  zone: ""
-gitops: true
-githubApp:
-  enabled: false
-  url: ""
-  schedule: '0 0 * * *'
+  registry: gcr.io
+  vaultName: puppywalnut
+  vaultSAName: puppywalnut-vt
+  zone: us-central1-c
 environments:
-- key: dev
-- key: staging
-- key: production
+- ingress:
+    cloud_dns_secret_name: external-dns-gcp-sa
+    domain: cbjx-puppywalnut.play-jxaas.live
+    domainIssuerURL: https://jx-tenant-service-jx.aps-raccoonshimmer.play-jxaas.live
+    externalDNS: true
+    namespaceSubDomain: -jx.
+    tls:
+      email: jenkins-x@cloudbees.com
+      enabled: true
+      production: false
+  key: dev
+  repository: environment-puppywalnut-dev
+- ingress:
+    domain: ""
+    externalDNS: false
+    namespaceSubDomain: ""
+    tls:
+      email: ""
+      enabled: false
+      production: false
+  key: staging
+  repository: environment-puppywalnut-staging
+- ingress:
+    domain: ""
+    externalDNS: false
+    namespaceSubDomain: ""
+    tls:
+      email: ""
+      enabled: false
+      production: false
+  key: production
+  repository: environment-puppywalnut-production
+githubApp:
+  enabled: true
+  schedule: 0 0 * * *
+  url: https://lighthouse-githubapp-jx.aps-raccoonshimmer.play-jxaas.live
+gitops: true
 ingress:
-  domain: ""
+  cloud_dns_secret_name: external-dns-gcp-sa
+  domain: cbjx-puppywalnut.play-jxaas.live
+  domainIssuerURL: https://jx-tenant-service-jx.aps-raccoonshimmer.play-jxaas.live
   externalDNS: true
+  namespaceSubDomain: -jx.
   tls:
     email: jenkins-x@cloudbees.com
     enabled: true
     production: false
 kaniko: true
+repository: bucketrepo
 secretStorage: vault
 storage:
+  backup:
+    enabled: true
+    url: gs://cbjx-puppywalnut-backup
   logs:
-    enabled: false
-    url: ""
+    enabled: true
+    url: gs://cbjx-puppywalnut-lts
   reports:
     enabled: false
     url: ""
   repository:
-    enabled: false
-    url: ""
+    enabled: true
+    url: gs://cbjx-puppywalnut-repository
+vault:
+  aws: {}
+  bucket: cbjx-puppywalnut-vault
+  key: puppywalnut-crypto-key
+  keyring: puppywalnut-keyring
+  name: puppywalnut
+  serviceAccount: puppywalnut-vt
 velero:
   namespace: velero
-webhook: prow
+  schedule: ""
+  serviceAccount: puppywalnut-vo
+  ttl: ""
+versionStream:
+  ref: v0.0.362
+  url: https://github.com/cloudbees/arcalos-jenkins-x-versions.git
+webhook: lighthouse
